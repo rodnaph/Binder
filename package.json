@@ -1,0 +1,6 @@
+{
+    "name": "binder",
+    "version": "0.0.1",
+    "description": "Creates objects and binds abilities together with verbs",
+    "homepage": "http://github.com/rodnaph/binder"
+}
