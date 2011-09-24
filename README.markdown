@@ -32,7 +32,7 @@ Usage Example
 To use Binder you can install it through _npm_.
 
 <pre>
-var binder = require( 'binder' );
+var binder = require( 'binder' ).create();
 </pre>
 
 It then takes functions to construct objects as the single argument to its _make_ method.
@@ -58,8 +58,13 @@ Car.prototype = {
 
 The car is then communicating with its collaborators without being dependent on _who_ they are, the only coupling is by the specific abilities that it requires.
 
+Binder Abilities
+----------------
+
+The binder object provides the ability *binderMake* which can make other objects that possess/require abilities.
+
 Credits
 -------
 
-Inspired by ideas from: http://thorstenlorenz.wordpress.com/2011/07/23/dependency-injection-is-dead-long-live-verbs/
+This is just a toy concept at the moment, and was inspired by ideas from: http://thorstenlorenz.wordpress.com/2011/07/23/dependency-injection-is-dead-long-live-verbs/
 

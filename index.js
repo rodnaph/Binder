@@ -1,67 +1,120 @@
 
-var abilities = {};
+function Binder() {}
 
-/**
- * Stores an ability that an object has.  If another object has
- * already defined this ability an error is thrown.
- *
- * @param Object object
- * @param String can
- */
-function storeAbility( object, can ) {
+Binder.prototype = {
 
-    if ( abilities[can] ) {
-        throw 'Ability "' +can+ '" already provided';
-    }
+    /**
+     * @var Array Abilities
+     */
+    can: [
+        'binderMake'
+    ],
 
-    abilities[ can ] = object;
+    /**
+     * @var Object Map of abilities to objects
+     */
+    abilities: {},
 
-}
+    /**
+     * Stores an ability that an object has.  If another object has
+     * already defined this ability an error is thrown.
+     *
+     * @param Object object
+     * @param String can
+     */
+    storeAbility: function( object, can ) {
 
-/**
- * Tries to give the object the ability it needs.  If the ability
- * has not been provided yet then an error is thrown.
- *
- * @param Object object
- * @param String need
- */
-function giveAbility( object, need ) {
+        if ( this.abilities[can] ) {
+            throw 'Ability "' +can+ '" already provided';
+        }
 
-    if ( !abilities[need] ) {
-        throw 'Ability "' +need+ '" has not been defined';
-    }
+        if ( !object[can] ) {
+            throw 'Object claims to have ability "' +can+ '", but it does not';
+        }
 
-    var ability = abilities[ need ];
+        this.abilities[ can ] = object;
 
-    object[ need ] = function() {
-        return ability[ need ].apply( ability, arguments );
-    };
+    },
 
-}
+    /**
+     * Tries to give the object the ability it needs.  If the ability
+     * has not been provided yet then an error is thrown.
+     *
+     * @param Object object
+     * @param String need
+     */
+    giveAbility: function( object, need ) {
 
-/**
- * Given a function for creating an object, create it and
- * give it all the verbs it needs to work.
- *
- * @param Function construct
- *
- * @return Array
- */
-exports.make = function( construct ) {
+        if ( !this.abilities[need] ) {
+            throw 'Ability "' +need+ '" has not been defined';
+        }
 
-    var object = new construct();
-    var needs = object.needs || [];
-    var cans = object.can || [];
+        var ability = this.abilities[ need ];
 
-    for ( var i=0; i<cans.length; i++ ) {
-        storeAbility( object, cans[i] );
-    }
+        object[ need ] = function() {
+            return ability[ need ]
+                .apply( ability, arguments );
+        };
 
-    for ( var i=0; i<needs.length; i++ ) {
-        giveAbility( object, needs[i] );
-    }
+    },
 
-    return object;
+    /**
+     * Given a function for creating an object, create it and
+     * give it all the verbs it needs to work.
+     *
+     * @param Function construct
+     *
+     * @return Array
+     */
+    make: function( construct ) {
+
+        var object = new construct();
+
+        this.bind( object );
+
+        return object;
+
+    },
+
+    /**
+     * Extract/bind abilities for object
+     *
+     * @param Object object
+     */
+    bind: function( object ) {
+
+        var needs = object.needs || [];
+        var cans = object.can || [];
+
+        for ( var i=0; i<cans.length; i++ ) {
+            this.storeAbility( object, cans[i] );
+        }
+
+        for ( var i=0; i<needs.length; i++ ) {
+            this.giveAbility( object, needs[i] );
+        }
+
+    },
+
+    /**
+     * Ability proxy to make()
+     *
+     */
+    binderMake: function() {
+
+        return this.make.apply( this, arguments );
+
+    } 
+
+};
+
+exports.create = function() {
+
+    var binder = new Binder();
+
+    binder.bind( binder );
+
+    return binder;
 
 };
 
