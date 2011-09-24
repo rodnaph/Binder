@@ -51,6 +51,7 @@ Binder.prototype = {
         var ability = this.abilities[ need ];
 
         object[ need ] = function() {
+            ability.abilitySource = object;
             return ability[ need ]
                 .apply( ability, arguments );
         };

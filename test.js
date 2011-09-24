@@ -20,7 +20,9 @@ function Minibus() {}
 Engine.prototype = {
     can: [ 'goForwards', 'goBackwards' ],
     goForwards: function() {},
-    goBackwards: function() {}
+    goBackwards: function() {
+        return this.abilitySource;
+    }
 };
 
 Car.prototype = {
@@ -28,7 +30,7 @@ Car.prototype = {
     needs: [ 'goForwards', 'goBackwards' ],
     driveToWork: function() {
         this.goForwards();
-        this.goBackwards();
+        return this.goBackwards();
     }
 };
 
@@ -79,5 +81,12 @@ runTest( 'Exception thrown when ability is redefined', function() {
         b.make( Car );
         b.make( ClassicCar );
     });
+});
+
+runTest( 'Provider of ability is available to caller of ability', function() {
+    var b = binder.create();
+    var engine = b.make( Engine ); 
+    var car = b.make( Car );
+    assert.equal( car, car.driveToWork() );
 });
 
