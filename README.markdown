@@ -58,3 +58,8 @@ Car.prototype = {
 
 The car is then communicating with its collaborators without being dependent on _who_ they are, the only coupling is by the specific abilities that it requires.
 
+Credits
+-------
+
+Inspired by ideas from: http://thorstenlorenz.wordpress.com/2011/07/23/dependency-injection-is-dead-long-live-verbs/
+
