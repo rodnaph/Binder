@@ -1,5 +1,9 @@
 
-function Binder() {}
+function Binder() {
+
+    this.abilities = [];
+
+}
 
 Binder.prototype = {
 
@@ -9,11 +13,6 @@ Binder.prototype = {
     can: [
         'binderMake'
     ],
-
-    /**
-     * @var Object Map of abilities to objects
-     */
-    abilities: {},
 
     /**
      * Stores an ability that an object has.  If another object has
