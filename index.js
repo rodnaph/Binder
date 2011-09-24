@@ -85,13 +85,13 @@ Binder.prototype = {
         var needs = object.needs || [];
         var cans = object.can || [];
 
-        for ( var i=0; i<cans.length; i++ ) {
-            this.storeAbility( object, cans[i] );
-        }
+        cans.map(function( can ) {
+            this.storeAbility( object, can );
+        }, this );
 
-        for ( var i=0; i<needs.length; i++ ) {
-            this.giveAbility( object, needs[i] );
-        }
+        needs.map(function( need ) {
+            this.giveAbility( object, need );
+        }, this );
 
     },
 
