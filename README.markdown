@@ -63,6 +63,37 @@ Binder Abilities
 
 The binder object provides the ability *binderMake* which can make other objects that possess/require abilities.
 
+Ability Namespace
+-----------------
+
+The astute reader *chortle* will notice that ability names form a single namespace.  Abilities provided and consumed by objects share a single space within a Binder object.  So how do you handle collisions?  Well you can provide mapping each side to map abilities to/from instance methods of your choosing.  So to provide an ability implemented by a named method do:
+
+<pre>
+Car.prototype = {
+  can: [
+    'driveToWork:makeTheCarDriveToWork'
+  ],
+  makeTheCarDriveToWork: function() {
+    // ability impl
+  }
+};
+</pre>
+
+And to add an ability to your object use the same syntax:
+
+<pre>
+Van.prototype = {
+  needs: [
+    'goFowards:makeTheCarGoForwards'
+  ],
+  driveToWork: function() 
+    this.makeTheCarGoForwards();
+  }
+};
+</pre>
+
+So the ability name namespace, no longer bound to method names, can be application defined.  (eg. 'com.mysite.somePackage.abilityName')
+
 Credits
 -------
 

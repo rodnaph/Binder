@@ -1,4 +1,39 @@
 
+function BindDefinition( definition ) {
+
+    this.name = definition;
+    this.method = definition;
+
+    this.init( definition );
+
+}
+    
+BindDefinition.prototype = {
+
+    /**
+     * Initialise name/method for bind definition
+     *
+     * @param String definition
+     */
+    init: function( definition ) {
+
+        if ( definition && definition.indexOf(':') != -1 ) {
+            var parts = definition.split( ':' );
+            this.name = parts[ 0 ];
+            this.method = parts[ 1 ];
+        }
+
+    }
+
+};
+
+function BoundAbility( object, def ) {
+
+    this.object = object;
+    this.def = def;
+
+}
+
 function Binder() {
 
     this.abilities = [];
@@ -19,19 +54,19 @@ Binder.prototype = {
      * already defined this ability an error is thrown.
      *
      * @param Object object
-     * @param String can
+     * @param BindDefinition def
      */
-    storeAbility: function( object, can ) {
+    storeAbility: function( object, def ) {
 
-        if ( this.abilities[can] ) {
-            throw 'Ability "' +can+ '" already provided';
+        if ( this.abilities[def.name] ) {
+            throw 'Ability "' +def.name+ '" already provided';
         }
 
-        if ( !object[can] ) {
-            throw 'Object claims to have ability "' +can+ '", but it does not';
+        if ( !object[def.method] ) {
+            throw 'Object claims to have ability "' +def.name+ '", but it does not';
         }
 
-        this.abilities[ can ] = object;
+        this.abilities[ def.name ] = new BoundAbility( object, def );
 
     },
 
@@ -40,20 +75,20 @@ Binder.prototype = {
      * has not been provided yet then an error is thrown.
      *
      * @param Object object
-     * @param String need
+     * @param BindDefinition def
      */
-    giveAbility: function( object, need ) {
+    giveAbility: function( object, def ) {
 
-        if ( !this.abilities[need] ) {
-            throw 'Ability "' +need+ '" has not been defined';
+        if ( !this.abilities[def.name] ) {
+            throw 'Ability "' +def.name+ '" has not been defined';
         }
 
-        var ability = this.abilities[ need ];
+        var boundAbility = this.abilities[ def.name ];
 
-        object[ need ] = function() {
-            ability.abilitySource = object;
-            return ability[ need ]
-                .apply( ability, arguments );
+        object[ def.method ] = function() {
+            boundAbility.object.abilitySource = object;
+            return boundAbility.object[ boundAbility.def.method ]
+                .apply( boundAbility.object, arguments );
         };
 
     },
@@ -87,11 +122,11 @@ Binder.prototype = {
         var cans = object.can || [];
 
         cans.map(function( can ) {
-            this.storeAbility( object, can );
+            this.storeAbility( object, new BindDefinition(can) );
         }, this );
 
         needs.map(function( need ) {
-            this.giveAbility( object, need );
+            this.giveAbility( object, new BindDefinition(need) );
         }, this );
 
     },

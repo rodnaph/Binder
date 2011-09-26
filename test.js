@@ -8,14 +8,12 @@ function runTest( name, func ) {
 }
 
 function Engine() {}
-
 function Car() {}
-
 function ClassicCar() {}
-
 function Lorry() {}
-
 function Minibus() {}
+function Bike() {}
+function MountainBike() {}
 
 Engine.prototype = {
     can: [ 'goForwards', 'goBackwards' ],
@@ -44,6 +42,24 @@ Lorry.prototype = {
 
 Minibus.prototype = {
     can: [ 'getPeople' ]
+};
+
+Bike.prototype = {
+    can: [
+        'doWheelie:bikeDoesWheelie'
+    ],
+    needs: [
+        'goForwards:bikeGoForwards'
+    ],
+    bikeDoesWheelie: function() {
+        return 'wheelie';
+    }
+};
+
+MountainBike.prototype = {
+    needs: [
+        'doWheelie'
+    ]
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -88,5 +104,20 @@ runTest( 'Provider of ability is available to caller of ability', function() {
     var engine = b.make( Engine ); 
     var car = b.make( Car );
     assert.equal( car, car.driveToWork() );
+});
+
+runTest( 'Abilities can be bound to arbitrary methods', function() {
+    var b = binder.create();
+    b.make( Engine );
+    var bike = b.make( Bike );
+    assert.ok( bike.bikeGoForwards != null );
+});
+
+runTest( 'Abilities can be provided by arbitrary methods', function() {
+    var b = binder.create();
+    b.make( Engine );
+    b.make( Bike );
+    var mb = b.make( MountainBike );
+    assert.equal( 'wheelie', mb.doWheelie() );
 });
 
