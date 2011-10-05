@@ -65,8 +65,10 @@ MountainBike.prototype = {
 ////////////////////////////////////////////////////////////////////
 
 runTest( 'Binder exposes its own abilities', function() {
+    function Foo() {}
+    Foo.prototype = { needs: ['binderMake'] };
     var b = binder.create();
-    assert.ok( b.binderMake, 'Binder did not advertise own abilities' );
+    assert.ok( b.make( Foo ).binderMake, 'Binder did not advertise own abilities' );
 });
 
 runTest( 'Binder exposes abilities of created objects', function() {

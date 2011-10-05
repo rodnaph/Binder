@@ -46,7 +46,7 @@ Binder.prototype = {
      * @var Array Abilities
      */
     can: [
-        'binderMake'
+        'binderMake:make'
     ],
 
     /**
@@ -129,17 +129,7 @@ Binder.prototype = {
             this.giveAbility( object, new BindDefinition(need) );
         }, this );
 
-    },
-
-    /**
-     * Ability proxy to make()
-     *
-     */
-    binderMake: function() {
-
-        return this.make.apply( this, arguments );
-
-    } 
+    }
 
 };
 
