@@ -3,7 +3,7 @@ var assert = require( 'assert' ),
     binder = require( './index' );
 
 function runTest( name, func ) {
-    console.log( '*', name );
+    console.log( '✔ ', name );
     func();
 }
 
@@ -14,6 +14,7 @@ function Lorry() {}
 function Minibus() {}
 function Bike() {}
 function MountainBike() {}
+function SuperCar() {}
 
 Engine.prototype = {
     can: [ 'goForwards', 'goBackwards' ],
@@ -60,6 +61,11 @@ MountainBike.prototype = {
     needs: [
         'doWheelie'
     ]
+};
+
+SuperCar.prototype = {
+    can: [ 'driveToWork' ],
+    driveToWork: function() {}
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -121,5 +127,13 @@ runTest( 'Abilities can be provided by arbitrary methods', function() {
     b.make( Bike );
     var mb = b.make( MountainBike );
     assert.equal( 'wheelie', mb.doWheelie() );
+});
+
+runTest( 'Abilities can be cleared to be rebound', function() {
+    var b = binder.create();
+    b.make( Engine );
+    b.make( Car );
+    b.clear( 'driveToWork' );
+    b.make( SuperCar );
 });
 

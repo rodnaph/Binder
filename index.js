@@ -112,6 +112,18 @@ Binder.prototype = {
     },
 
     /**
+     * Clear a bound ability (does not affect any objects currently bound, will
+     * only affects newly bound objects)
+     *
+     * @param String name
+     */
+    clear: function( name ) {
+
+        delete this.abilities[ name ];
+
+    },
+
+    /**
      * Extract/bind abilities for object
      *
      * @param Object object
