@@ -145,7 +145,11 @@ Binder.prototype = {
 
 };
 
-function TestBinder() {}
+function TestBinder() {
+
+    this.abilities = [];
+
+}
 
 TestBinder.prototype = new Binder();
 
