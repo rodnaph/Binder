@@ -145,13 +145,51 @@ Binder.prototype = {
 
 };
 
-exports.create = function() {
+function TestBinder() {}
 
-    var binder = new Binder();
+TestBinder.prototype = new Binder();
+
+/**
+ * Mock an ability to a specified function
+ *
+ * @param String ability
+ * @param Function method
+ */
+TestBinder.prototype.mock = function( ability, method ) {
+
+    var object = {
+        can: [ ability ]
+    };
+
+    object[ ability ] = method || function() {};
+
+    this.clear( ability );
+    this.bind( object );
+
+};
+
+/**
+ * Make a binder object
+ *
+ * @param Function construct
+ *
+ * @return Binder
+ */
+function makeBinder( construct ) {
+
+    var binder = new construct();
 
     binder.bind( binder );
 
     return binder;
 
+}
+
+exports.create = function() {
+    return makeBinder( Binder );
+};
+
+exports.createTest = function() {
+    return makeBinder( TestBinder );
 };
 

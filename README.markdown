@@ -94,6 +94,17 @@ Van.prototype = {
 
 So the ability name namespace, no longer bound to method names, can be application defined.  (eg. 'com.mysite.somePackage.abilityName')
 
+Unit Testing Abilities
+----------------------
+
+There's also a *BinderTest* object available via the _createTest()_ method, that can be used in unit testing.  The main method it provides in addition to the normal binder methods is *mock*.  This allows you to mock an ability for use in unit testing.
+
+<pre>
+binderTest = require( 'binder' ).createTest();
+binderTest.mock( 'someAbility', function() { ... } );
+var obj = binderTest.make( MyClass );
+</pre>
+
 Credits
 -------
 
